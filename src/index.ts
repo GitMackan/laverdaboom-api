@@ -25,6 +25,10 @@ server.listen(8080, () => {
   console.log("Server running on http://localhost:8080/");
 });
 
+app.get("/", (req, res) => {
+  res.send("Api is running");
+});
+
 const MONGO_URL =
   "mongodb+srv://marcus:StUS5BKoZx5J68aI@cluster0.ufvs8xb.mongodb.net/?retryWrites=true&w=majority";
 

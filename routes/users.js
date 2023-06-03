@@ -1,25 +1,27 @@
 const express = require("express");
+const { merge } = require("lodash");
 const router = express.Router();
 const User = require("../models/user");
 
 // Get all
-router.get("/", async (req, res) => {
+router.get("/", isAuthenticated, async (req, res) => {
   try {
     const users = await User.find();
-    res.json(users);
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
 // Get one
-router.get("/:id", getUser, (req, res) => {
+router.get("/:id", getUser, isAuthenticated, (req, res) => {
   res.json(res.user);
 });
 
 // Create one
-router.post("/", async (req, res) => {
+router.post("/", isAuthenticated, async (req, res) => {
   const user = new User({
+    email: req.body.email,
     username: req.body.username,
     password: req.body.password,
   });
@@ -33,7 +35,7 @@ router.post("/", async (req, res) => {
 });
 
 // Update
-router.patch("/:id", getUser, async (req, res) => {
+router.patch("/:id", isAuthenticated, getUser, async (req, res) => {
   if (req.body.username != null) {
     res.user.username = req.body.username;
   }
@@ -50,7 +52,7 @@ router.patch("/:id", getUser, async (req, res) => {
 });
 
 // Delete one
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const deletedUser = await User.findByIdAndDelete(id);
@@ -73,6 +75,28 @@ async function getUser(req, res, next) {
 
   res.user = user;
   next();
+}
+
+async function isAuthenticated(req, res, next) {
+  try {
+    const sessionToken = req.cookies["LAVERDABOOM-AUTH"];
+    console.log(sessionToken);
+
+    if (!sessionToken) {
+      return res.sendStatus(403);
+    }
+
+    const existingUser = await User.findOne({ sessionToken: sessionToken });
+
+    if (!existingUser) {
+      return res.sendStatus(403);
+    }
+
+    return next();
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  }
 }
 
 module.exports = router;

@@ -34,13 +34,16 @@ const connectToDatabase = async () => {
 
 connectToDatabase();
 
-app.use(express.json());
 app.use(
   cors({
-    origin: "https://laverdaboom.com",
+    origin: "*",
     credentials: true,
   })
 );
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", true);
+});
+app.use(express.json());
 app.use(cookieParser());
 app.use(compression());
 app.set("view engine", "ejs");
@@ -63,4 +66,4 @@ app.use("/register", registerRouter);
 app.use("/images", imagesRouter);
 app.use("/email", emailRouter);
 
-app.listen(process.env.PORT, () => console.log("Server has started"));
+app.listen(process.env.PORT || 8080, () => console.log("Server has started"));

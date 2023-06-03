@@ -4,12 +4,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
-const dotenv = require("dotenv");
 const multer = require("multer");
 const path = require("path");
 const { countBy } = require("lodash");
-
-dotenv.config();
 
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {

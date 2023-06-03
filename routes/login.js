@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
     const updatedUser = await user.save();
 
     res.cookie("LAVERDABOOM-AUTH", sessionToken, {
-      domain: "localhost",
+      domain: "https://laverdaboom.com",
       path: "/",
     });
     res.status(200).json({ sessionToken: sessionToken });

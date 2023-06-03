@@ -36,7 +36,7 @@ connectToDatabase();
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://laverdaboom.com",
     credentials: true,
   })
 );

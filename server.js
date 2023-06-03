@@ -37,7 +37,7 @@ connectToDatabase();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://laverdaboom.com/",
+    origin: "https://laverdaboom.com",
     credentials: true,
   })
 );

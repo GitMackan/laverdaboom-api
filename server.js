@@ -37,7 +37,7 @@ connectToDatabase();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://laverdaboom-front--precious-donut-65f0fa.netlify.app",
+    origin: "http://laverdaboom.com/",
     credentials: true,
   })
 );

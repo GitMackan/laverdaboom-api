@@ -80,7 +80,6 @@ async function getUser(req, res, next) {
 async function isAuthenticated(req, res, next) {
   try {
     const sessionToken = req.cookies["LAVERDABOOM-AUTH"];
-    console.log(sessionToken);
 
     if (!sessionToken) {
       return res.sendStatus(403);

@@ -56,14 +56,14 @@ const usersRouter = require("./routes/users");
 const dogsRouter = require("./routes/dogs");
 const registerRouter = require("./routes/register");
 const loginRouter = require("./routes/login");
-const imagesRouter = require("./routes/images");
-const emailRouter = require("./routes/email");
+// const imagesRouter = require("./routes/images");
+// const emailRouter = require("./routes/email");
 
 app.use("/users", usersRouter);
 app.use("/dogs", dogsRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
-app.use("/images", imagesRouter);
-app.use("/email", emailRouter);
+// app.use("/images", imagesRouter);
+// app.use("/email", emailRouter);
 
 app.listen(process.env.PORT || 8080, () => console.log("Server has started"));

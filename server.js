@@ -1,11 +1,15 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
+const dotenv = require("dotenv");
 const multer = require("multer");
 const path = require("path");
 const { countBy } = require("lodash");
+
+dotenv.config();
 
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -34,6 +38,12 @@ const connectToDatabase = async () => {
 connectToDatabase();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "https://laverdaboom-front--precious-donut-65f0fa.netlify.app",
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(compression());
 app.set("view engine", "ejs");

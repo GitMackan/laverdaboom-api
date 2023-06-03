@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
-
-dotenv.config();
 
 router.post("/", async (req, res) => {
   const { name, email, message } = req.body;

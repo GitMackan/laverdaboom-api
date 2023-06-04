@@ -262,7 +262,7 @@ async function getDogByName(req, res, next) {
 
 async function isAuthenticated(req, res, next) {
   try {
-    const sessionToken = req.cookies["LAVERDABOOM-AUTH"];
+    const sessionToken = req.body.sessionToken;
 
     if (!sessionToken) {
       return res.sendStatus(403);

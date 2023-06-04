@@ -4,9 +4,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
-const multer = require("multer");
-const path = require("path");
-const { countBy } = require("lodash");
 
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -38,7 +35,6 @@ app.use(
   cors({
     origin: "https://laverdaboom.com",
     credentials: true,
-    exposedHeaders: ["set-cookie"],
   })
 );
 // app.use((req, res, next) => {
@@ -77,4 +73,4 @@ app.use("/register", registerRouter);
 app.use("/images", imagesRouter);
 app.use("/email", emailRouter);
 
-app.listen(process.env.PORT, () => console.log("Server has started"));
+app.listen(process.env.PORT || 8080, () => console.log("Server has started"));

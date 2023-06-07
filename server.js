@@ -19,6 +19,8 @@ const compression = require("compression");
 
 // const upload = multer({ storage: storage });
 
+require("dotenv").config();
+
 const connectToDatabase = async () => {
   try {
     await mongoose.connect(process.env.DATABASE_URL);
@@ -29,11 +31,13 @@ const connectToDatabase = async () => {
   }
 };
 
+const pedigree = [];
+
 connectToDatabase();
 
 app.use(
   cors({
-    origin: "https://laverdaboom.com",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );

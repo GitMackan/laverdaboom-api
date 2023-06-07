@@ -30,27 +30,8 @@ router.get("/", async (req, res) => {
 
 // Get one by name
 router.get("/:name", getDogByName, (req, res) => {
-  // const dogName = req.params.name;
-
-  // Dog.findOne({ name: dogName })
-  //   .then((dog) => {
-  //     if (!dog) {
-  //       return res.status(404).json({ error: "Dog not found" });
-  //     }
-
-  //     return res.json(dog);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error getting dog:", error);
-  //     res.status(500).json({ error: "Internal Server Error" });
-  //   });
   res.json(res.dog);
 });
-
-// // Get one
-// router.get("/:id", getDog, (req, res) => {
-//   res.json(res.dog);
-// });
 
 // Create one
 router.post("/", upload.single("image"), isAuthenticated, async (req, res) => {
@@ -178,6 +159,9 @@ router.patch(
     }
     if (res.dog.titles.length > 0 && req.body.titles == null) {
       res.dog.titles = [];
+    }
+    if (res.dog.pedigree != null) {
+      res.dog.pedigree = req.body.pedigree;
     }
     if (!req.file) {
       if (req.body.image != null) {

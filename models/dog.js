@@ -61,6 +61,10 @@ const dogSchema = new mongoose.Schema({
     type: [String],
     required: false,
   },
+  pedigree: {
+    type: [Object],
+    required: false,
+  },
   image: [
     {
       type: String,

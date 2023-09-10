@@ -19,7 +19,7 @@ const compression = require("compression");
 
 // const upload = multer({ storage: storage });
 
-require("dotenv").config();
+// require("dotenv").config();
 
 const connectToDatabase = async () => {
   try {

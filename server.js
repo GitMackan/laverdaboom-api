@@ -19,7 +19,7 @@ const compression = require("compression");
 
 // const upload = multer({ storage: storage });
 
-// require("dotenv").config();
+require("dotenv").config();
 
 const connectToDatabase = async () => {
   try {
@@ -37,7 +37,7 @@ connectToDatabase();
 
 app.use(
   cors({
-    origin: "https://laverdaboom.com",
+    origin: ["http://localhost:3000", "https://laverdaboom.com"],
     credentials: true,
   })
 );

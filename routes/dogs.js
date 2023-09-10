@@ -238,7 +238,9 @@ async function getDogByName(req, res, next) {
     req.params.name.charAt(0).toUpperCase() + req.params.name.slice(1);
   let dog;
   try {
-    dog = await Dog.findOne({ nickName: nickName });
+    dog = await Dog.findOne({
+      nickName: nickName === "Skrallan" ? "Skrållan" : nickName,
+    });
     if (!dog) {
       return res.status(404).json({ message: "Cant find dog" });
     }

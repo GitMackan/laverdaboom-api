@@ -5,6 +5,10 @@ const dogSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  nickName: {
+    type: String,
+    required: true,
+  },
   breed: {
     type: String,
     required: false,

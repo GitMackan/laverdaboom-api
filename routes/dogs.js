@@ -50,6 +50,7 @@ router.post("/", upload.single("image"), isAuthenticated, async (req, res) => {
     description: req.body.description,
     angelDog: req.body.angelDog,
     image: req.file && req.file.originalname,
+    nickName: req.body.nickName,
   });
 
   const image = new Image({
@@ -79,14 +80,14 @@ router.post("/", upload.single("image"), isAuthenticated, async (req, res) => {
         image.save();
       });
 
-      const newDog = await dog.save();
+      await dog.save();
       res.status(201).json("Allt gick bra!");
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
   } else {
     try {
-      const newDog = await dog.save();
+      await dog.save();
       res.status(201).json("Allt gick bra!");
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -129,6 +130,9 @@ router.patch(
     }
     if (req.body.regNr != null) {
       res.dog.regNr = req.body.regNr;
+    }
+    if (req.body.nickName != null) {
+      res.dog.nickName = req.body.nickName;
     }
     if (req.body.gender != null) {
       res.dog.gender = req.body.gender;
@@ -185,7 +189,7 @@ router.patch(
           image.save();
         });
 
-        const updatedDog = await res.dog.save();
+        await res.dog.save();
         res.status(201).json("Allt gick bra!");
       } catch (error) {
         res.status(400).json({ message: error.message });
@@ -230,14 +234,16 @@ async function getDog(req, res, next) {
 
 // Middleware
 async function getDogByName(req, res, next) {
+  const nickName =
+    req.params.name.charAt(0).toUpperCase() + req.params.name.slice(1);
   let dog;
   try {
-    dog = await Dog.findOne({ name: req.params.name });
+    dog = await Dog.findOne({ nickName: nickName });
     if (!dog) {
-      return send.status(404).json({ message: "Cant find dog" });
+      return res.status(404).json({ message: "Cant find dog" });
     }
   } catch (error) {
-    return send.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 
   res.dog = dog;

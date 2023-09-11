@@ -31,13 +31,11 @@ const connectToDatabase = async () => {
   }
 };
 
-const pedigree = [];
-
 connectToDatabase();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://laverdaboom.com"],
     credentials: true,
   })
 );

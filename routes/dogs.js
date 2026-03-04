@@ -57,7 +57,7 @@ router.put("/:id", upload.single("image"), async(req, res) => {
             description: description || null,
             angel_dog: angel_dog || null,
             titles: Array.isArray(titles) ? titles : [],
-            pedigree: pedigree ? JSON.stringify(pedigree) : null,
+            pedigree: pedigree ? pedigree : null,
         };
 
         // Om ny bild skickas med, ladda upp till S3
@@ -96,7 +96,6 @@ router.put("/:id", upload.single("image"), async(req, res) => {
 
 // GET all dogs
 router.get("/", async(req, res) => {
-    console.log("hej2")
     try {
         const { data, error } = await supabase
             .from("dogs")

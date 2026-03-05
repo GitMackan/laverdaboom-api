@@ -18,7 +18,7 @@ router.post("/", async(req, res) => {
 
     const mailOptions = {
         from: "laverdaboom@gmail.com",
-        to: "laverdaboom@gmail.com",
+        to: "sandra.brannstrom@hotmail.com",
         subject: "Meddelande från hemsida",
         text: `
             Name: ${name}

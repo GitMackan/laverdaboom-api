@@ -3,8 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const AWS = require("aws-sdk");
 const supabase = require("../supabase");
-
-console.log("hej")
+const requireAuth = require("../middleware/auth");
 
 // Multer memory storage
 const storage = multer.memoryStorage();
@@ -18,23 +17,23 @@ const s3 = new AWS.S3({
 });
 
 // UPDATE dog
-router.put("/:id", upload.single("image"), async(req, res) => {
-    console.log("kom hit")
+router.put("/:id", requireAuth, upload.single("file"), async(req, res) => {
     try {
         const { id } = req.params;
+        console.log("body: ", req.body)
         const {
             name,
             nickname,
             breed,
             size,
-            hair_type,
-            reg_nr,
+            hairType,
+            regNr,
             gender,
             color,
             ivdd,
             bph,
             eye,
-            birth_date,
+            birthDate,
             description,
             angel_dog,
             titles,
@@ -46,22 +45,24 @@ router.put("/:id", upload.single("image"), async(req, res) => {
             nickname,
             breed: breed || null,
             size: size || null,
-            hair_type: hair_type || null,
-            reg_nr: reg_nr || null,
+            hair_type: hairType || null,
+            reg_nr: regNr || null,
             gender: gender || null,
             color: color || null,
             ivdd: ivdd || null,
             bph: bph || null,
             eye: eye || null,
-            birth_date: birth_date || null,
+            birth_date: birthDate || null,
             description: description || null,
             angel_dog: angel_dog || null,
             titles: Array.isArray(titles) ? titles : [],
             pedigree: pedigree ? pedigree : null,
         };
 
+
         // Om ny bild skickas med, ladda upp till S3
         if (req.file) {
+            console.log("kom hit")
             const s3params = {
                 Bucket: process.env.AWS_S3_BUCKET,
                 Key: `uploads/${req.file.originalname}`,
@@ -76,7 +77,9 @@ router.put("/:id", upload.single("image"), async(req, res) => {
                 });
             });
 
-            updateData.image = [s3Data.Location];
+            const fileName = s3Data.Key.split('uploads/')[1]
+
+            updateData.image = [fileName];
         }
 
         const { data, error } = await supabase
@@ -128,7 +131,7 @@ router.get("/:id", async(req, res) => {
 });
 
 // CREATE dog
-router.post("/", upload.single("image"), async(req, res) => {
+router.post("/", requireAuth, upload.single("image"), async(req, res) => {
     try {
         const {
             name,

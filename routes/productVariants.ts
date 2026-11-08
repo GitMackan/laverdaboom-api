@@ -4,6 +4,7 @@ import supabase from "../supabase";
 import supabaseAdmin from "../supabaseAdmin";
 import requireAuth from "../middleware/auth";
 import { Database } from "../types/supabase";
+import { availableVariant } from "../lib/inventory";
 
 const router = Router();
 
@@ -44,6 +45,10 @@ const validateVariant = (body: Record<string, unknown>) => {
         if (value !== undefined && typeof value !== "boolean") return false;
     }
 
+    if (body.expected_stock_quantity !== undefined &&
+        (!Number.isSafeInteger(body.expected_stock_quantity) ||
+            (body.expected_stock_quantity as number) < 0)) return false;
+
     return true;
 };
 
@@ -68,7 +73,7 @@ router.get("/product/:productId", async (req: Request, res: Response) => {
         return;
     }
 
-    res.json(data);
+    res.json(data?.map(availableVariant));
 });
 
 // CREATE variant
@@ -142,19 +147,30 @@ router.put("/:id", requireAuth, async (req: Request, res: Response) => {
         return;
     }
 
-    const { data, error } = await supabaseAdmin
+    let query = supabaseAdmin
         .from("product_variants")
         .update(update)
-        .eq("id", id)
-        .select()
-        .maybeSingle();
+        .eq("id", id);
+    // A sale may have changed physical stock while the admin form was open.
+    if (req.body.expected_stock_quantity !== undefined) {
+        query = query.eq("stock_quantity", req.body.expected_stock_quantity);
+    }
+    const { data, error } = await query.select().maybeSingle();
 
     if (error) {
+        if (error.code === "23514") {
+            res.status(409).json({ message: "Lagersaldot kan inte vara lägre än antalet reserverade varor. Uppdatera sidan för aktuellt saldo." });
+            return;
+        }
         res.status(400).json({ message: error.message });
         return;
     }
 
     if (!data) {
+        if (req.body.expected_stock_quantity !== undefined) {
+            res.status(409).json({ message: "Lagersaldot har ändrats eller varianten har tagits bort. Uppdatera sidan innan du sparar igen." });
+            return;
+        }
         res.status(404).json({ message: "Variant not found" });
         return;
     }

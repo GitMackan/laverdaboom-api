@@ -75,7 +75,10 @@ router.put("/:id", requireAuth, upload.single("file"), async (req: MulterRequest
 
             const s3Data = await uploadToS3(s3params);
             const fileName = s3Data.Key.split("uploads/")[1];
-            updateData.image = [fileName];
+            const { data: existingDog, error: imageError } = await supabase
+                .from("dogs").select("image").eq("id", id).single();
+            if (imageError) throw imageError;
+            updateData.image = [...(existingDog.image ?? []), fileName];
         }
 
         const { data, error } = await supabase
@@ -90,6 +93,22 @@ router.put("/:id", requireAuth, upload.single("file"), async (req: MulterRequest
     } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
         res.status(500).json({ message });
+    }
+});
+
+// Update only the image list; leave unsaved form fields untouched.
+router.patch("/:id", requireAuth, async (req: Request, res: Response) => {
+    try {
+        const { image } = req.body;
+        if (!Array.isArray(image) || !image.every((item: unknown) => typeof item === "string")) {
+            return res.status(400).json({ message: "En lista med bildnamn krävs." });
+        }
+        const { data, error } = await supabase.from("dogs")
+            .update({ image }).eq("id", req.params.id).select().single();
+        if (error) throw error;
+        return res.json(data);
+    } catch (err) {
+        return res.status(500).json({ message: err instanceof Error ? err.message : "Unknown error" });
     }
 });
 

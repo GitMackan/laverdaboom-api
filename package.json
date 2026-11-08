@@ -7,6 +7,8 @@
         "node": "18.2"
     },
     "scripts": {
+        "email:verify": "node --require ts-node/register scripts/verifyEmail.ts",
+        "test": "node --require ts-node/register --test tests/*.test.ts",
         "devStart": "nodemon --exec ts-node server.ts",
         "build": "tsc",
         "start": "node dist/server.js"
@@ -15,6 +17,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@electric-sql/pglite": "^0.5.14",
         "@types/compression": "^1.8.1",
         "@types/cookie-parser": "^1.4.10",
         "@types/cors": "^2.8.19",
@@ -42,6 +45,8 @@
         "mongodb": "^5.2.0",
         "multer": "^1.4.5-lts.1",
         "nodemailer": "^6.9.3",
-        "pg": "^8.18.0"
+        "pg": "^8.18.0",
+        "stripe": "^23.1.0",
+        "zod": "^4.6.7"
     }
 }

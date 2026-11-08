@@ -4,6 +4,7 @@ import supabase from "../supabase";
 import requireAuth from "../middleware/auth";
 import { Database } from "../types/supabase";
 import supabaseAdmin from "../supabaseAdmin";
+import { availableProduct } from "../lib/inventory";
 
 const PRODUCT_CATEGORIES = ["leash", "collar", "other"] as const;
 
@@ -43,7 +44,7 @@ router.get("/", async (_req: Request, res: Response) => {
         return;
     }
 
-    res.json(data);
+    res.json(data?.map(availableProduct));
 });
 
 // GET all products, including inactive (admin)
@@ -82,7 +83,7 @@ router.get("/:slug", async (req: Request, res: Response) => {
         return;
     }
 
-    res.json(data);
+    res.json(availableProduct(data));
 });
 
 // CREATE product (admin)
